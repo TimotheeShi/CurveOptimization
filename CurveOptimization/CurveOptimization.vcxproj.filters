@@ -23,5 +23,14 @@
     <ClInclude Include="Cycloid_Cal.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CycloidGear.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PointInspection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Preprocess.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

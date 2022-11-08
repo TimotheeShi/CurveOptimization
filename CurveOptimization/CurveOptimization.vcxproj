@@ -142,7 +142,10 @@
     <ClCompile Include="CurveOptimization.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CycloidGear.h" />
     <ClInclude Include="Cycloid_Cal.h" />
+    <ClInclude Include="PointInspection.h" />
+    <ClInclude Include="Preprocess.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
