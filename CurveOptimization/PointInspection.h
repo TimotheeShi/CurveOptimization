@@ -40,7 +40,6 @@ public:
 		return test1;
 	}
 
-
 	bool SwitchInitialPoint(std::vector<std::pair<double, double>>& zeiss, std::vector<std::pair<double, double>>& zeiss_pol, const int Z) {
 		double maxradium = zeiss_pol[0].first;
 		int argmax = 0, i = zeiss_pol.size() - zeiss_pol.size()/ (0.9 * Z);

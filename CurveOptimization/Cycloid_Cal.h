@@ -121,7 +121,7 @@ std::vector<double> cycloid_pol_derivative(const double& t, const double& R, con
 /**
  * 该函数为计算了摆线的模分别对R,r,e求导的导数值
  * @params:
- *		phi: 参数方程的相位角；
+ *		phi: 参数方程的相位角；E:\WorkSpace\01 样机开发\cycloid_-optimization\Cycloid_Gear.h
  *		R: 针齿分布圆直径；
  *		Z: 摆线齿轮齿数；
  *		r: 针齿直径；

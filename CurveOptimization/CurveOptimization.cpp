@@ -34,6 +34,10 @@ void opt(const int &Z, double &R, double &r, double &e, double &obj, const doubl
 
     // 摆线参数优化：
     rv10c.paramsopt();
+    R = 2*rv10c.R;
+    r = 2*rv10c.r;
+    e = rv10c.e;
+    obj = rv10c.obj_func;
 
     // 计算输入曲线与理论摆线偏差：（类似Fa）
     //output_dis(rv10c.distance(), rv10c.flank);
@@ -43,17 +47,15 @@ void opt(const int &Z, double &R, double &r, double &e, double &obj, const doubl
 }
 
 // 将数据data输出到E盘中名称为name的txt文件中
-void write_data(const string& name, const vector<double>& data) {
+void write_data(const string& name, const double& data) {
     string path = "E:\\" + name + ".txt";
-    std::ofstream ofs(path);
+    std::ofstream ofs(path, std::ios_base::app);
     if (!ofs) {
         cout << "Write Error: " << name << ".txt!" << endl;
         return;
     }
-    for (auto itr = data.cbegin(); itr != data.cend(); ++itr) {
-        ofs << *itr;
-        ofs << endl;
-    }
+    ofs << data << std::endl;
+    ofs.close();
     return;
 }
 
@@ -61,24 +63,24 @@ int main()
 {
 
     const int Z = 39;
-    vector<string> name{ "D121", "D122",  "D131", "D132", "D151", "D152", "D162"};                       // 点云文件名称，每个零件由一对引号标示，可放入多个零件名称。
-    string dir = "E:\\WorkSpace\\02 正向研发\\摆线齿形项目\\40EPD\\";  // 点云文件绝对路径
-    vector<double> R_avg = { 128.0 };                 // 针齿分布圆直径初始值
-    vector<double> r_avg = { 6.0 };                   // 针齿直径初始值
-    vector<double> e_avg = { 1.3 };                  // 偏心距初始值
+    vector<string> name{ "P011", "P012", "P021", "P022"};                       // 点云文件名称，每个零件由一对引号标示，可放入多个零件名称。
+    string dir = "E:\\WorkSpace\\01 样机开发\\160N\\99 摆线精度\\01 原始点云\\";  // 点云文件绝对路径
+    vector<double> R_avg = { 177.0 };                 // 针齿分布圆直径初始值
+    vector<double> r_avg = { 7 };                   // 针齿直径初始值
+    vector<double> e_avg = { 1.7 };                  // 偏心距初始值
     vector<double> obj_avg = { 0.0 };                     // 目标函数初始值
-    const double lower = 120.0;                         // 评价范围下界
-    const double upper = 124.0;                         // 评价范围上界
-    int num = 500;                                      // 优化次数
+    const double lower = 167.3;                         // 评价范围下界
+    const double upper = 172.4;                         // 评价范围上界
+    int epoch = 1;                                      // 优化次数
     int n = name.size();
-    for (int i = 0; i < num; i++) {
+    for (int i = 0; i < epoch; i++) {
         double R_sum = 0;
         double r_sum = 0;
         double e_sum = 0;
         double obj_sum = 0;
         // 计算优化结果平均值
         for(auto str = name.begin(); str != name.end(); str++) {
-            cout << "\n\niteration num: " << i << endl;
+            cout << "\n\nepoch[" << i << "]:" << endl;
             string file_name = dir + *str + "_dev.txt";
             cout << "\n\n" << file_name << ": \n";
             double R = R_avg[i];
@@ -91,15 +93,27 @@ int main()
             e_sum += e;
             obj_sum += obj;
         }
+        double R_prev = R_avg.back();
+        double r_prev = r_avg.back();
+        double e_prev = e_avg.back();
+        double obj_prev = obj_avg.back();
         R_avg.push_back(R_sum / n);
         r_avg.push_back(r_sum / n);
         e_avg.push_back(e_sum / n);
         obj_avg.push_back(obj_sum / n); 
         // 输出每步优化结果到文件
-        write_data("R", R_avg);
-        write_data("r1", r_avg);
-        write_data("e", e_avg);
-        write_data("obj", obj_avg);
+        write_data("R", R_avg.back());
+        write_data("r1", r_avg.back());
+        write_data("e", e_avg.back());
+        write_data("obj", obj_avg.back());
+        std::cout << std::endl;
+        
+        std::cout << "epoch[ " << i << "] " << std::endl;
+        std::cout << "Cost = " << obj_avg.back() << ", delta_Cost = " << obj_avg.back() - obj_prev << std::endl;
+        std::cout << "dR = " << R_avg.back() << ", delta_dR = " << R_avg.back() - R_prev << std::endl;
+        std::cout << "dr = " << r_avg.back() << ", delta_dr = " << r_avg.back() - r_prev << std::endl;
+        std::cout << "de = " << e_avg.back() << ", delta_de = " << e_avg.back() - e_prev << std::endl;
+        std::cout << "-------------------------------------------------------------------------------" << std::endl;
 
     }
 

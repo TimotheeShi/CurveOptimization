@@ -99,10 +99,12 @@ public:
 	bool theoritical_ang(std::vector<std::pair<double, double>>* zeiss, std::vector<std::pair<std::pair<double, double>, double>>* zeiss_opt) {
 		for (const pair<double, double>& point : *zeiss) {
 			double ang0 = atan2(point.second, point.first);
-			double ang = ang0 - 3.1415926 / Z;
+			int acc = 3; // According to experiments, acc must smaller than 3!
+			double range = 3.1415926 / Z / acc; // Accelerate the finding process. Higher the acc is, faster the process is.
+			double ang = ang0 - range ;
 			double min_dis = distance(point.first, point.second, 0, 0);
 			double min_ang = ang;
-			for (; ang < ang0 + 3.1415926 / Z; ang += 0.000001) { // 0.000001
+			for (; ang < ang0 + range ; ang += 0.000001) { // 0.000001
 				auto the = cycloid_car(ang, R, Z, r, e);
 				double curr_dis = distance(point.first, point.second, the.first, the.second);
 				if (min_dis > curr_dis) {
@@ -168,7 +170,7 @@ public:
 			e += lr * de;
 
 			diff_obj = old_obj - obj;
-			cout << "[" << ++j << "] object function: " << obj << ", diff_obj: " << diff_obj << ", dR=" << 2*R << ", dr=" << 2*r << ", e=" << e << endl;
+			cout << "[" << ++j << "] Cost function: " << obj << ", diff_cost: " << diff_obj << ", dR=" << 2*R << ", dr=" << 2*r << ", e=" << e << endl;
 			if (dR * old_dR < 0 || dr * old_dr < 0 || de * old_de < 0)
 				break;
 			old_dR = dR;
